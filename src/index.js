@@ -90,7 +90,9 @@ export default class Gantt {
             date_format: 'YYYY-MM-DD',
             popup_trigger: 'click',
             custom_popup_html: null,
-            language: 'en'
+            language: 'en',
+            sticky_header: false,
+            auto_today: false
         };
         this.options = Object.assign({}, default_options, options);
     }
@@ -638,7 +640,9 @@ export default class Gantt {
         if (!parent_element) return;
 
         const hours_before_first_task = date_utils.diff(
-            this.get_oldest_starting_date(),
+            this.options.auto_today
+                ? new Date()
+                : this.get_oldest_starting_date(),
             this.gantt_start,
             'hour'
         );
@@ -649,7 +653,9 @@ export default class Gantt {
                 this.options.column_width -
             this.options.column_width;
 
-        parent_element.scrollLeft = scroll_pos;
+        parent_element.scrollLeft =
+            scroll_pos -
+            (this.options.auto_today ? parent_element.offsetWidth / 2 : 0);
     }
 
     bind_grid_click() {
