@@ -49,9 +49,15 @@ export default class Gantt {
             this.$svg.classList.add('gantt');
         }
 
+        this.$dateContainer = createSVG('svg', {
+            class: 'date-container'
+        });
+
         // wrapper element
         this.$container = document.createElement('div');
         this.$container.classList.add('gantt-container');
+
+        this.$container.appendChild(this.$dateContainer);
 
         const parent_element = this.$svg.parentElement;
         parent_element.appendChild(this.$container);
@@ -265,6 +271,13 @@ export default class Gantt {
     bind_events() {
         this.bind_grid_click();
         this.bind_bar_events();
+        this.bind_popup_events();
+    }
+
+    bind_popup_events() {
+        $.on(this.popup_wrapper, 'click', e => {
+            this.trigger_event('popup_click', [e]);
+        });
     }
 
     render() {
@@ -281,7 +294,7 @@ export default class Gantt {
 
     setup_layers() {
         this.layers = {};
-        const layers = ['grid', 'date', 'arrow', 'progress', 'bar', 'details'];
+        const layers = ['grid', 'arrow', 'progress', 'bar', 'details'];
         // make group layers
         for (let layer of layers) {
             this.layers[layer] = createSVG('g', {
@@ -289,6 +302,10 @@ export default class Gantt {
                 append_to: this.$svg
             });
         }
+        this.layers.date = createSVG('g', {
+            class: 'date',
+            append_to: this.$dateContainer
+        });
     }
 
     make_grid() {
@@ -318,6 +335,7 @@ export default class Gantt {
 
         $.attr(this.$svg, {
             height: grid_height + this.options.padding + 100,
+            height: grid_height,
             width: '100%'
         });
     }
@@ -364,6 +382,11 @@ export default class Gantt {
             height: header_height,
             class: 'grid-header',
             append_to: this.layers.grid
+        });
+
+        $.attr(this.$dateContainer, {
+            width: header_width,
+            height: header_height
         });
     }
 
@@ -731,6 +754,13 @@ export default class Gantt {
             is_resizing_right = false;
         });
 
+        $.on(this.$container, 'scroll', e => {
+            requestAnimationFrame(() => {
+                this.$dateContainer.style.top =
+                    this.$container.scrollTop + 'px';
+            });
+        });
+
         $.on(this.$svg, 'mouseup', e => {
             this.bar_being_dragged = null;
             bars.forEach(bar => {
@@ -917,6 +947,7 @@ export default class Gantt {
      */
     clear() {
         this.$svg.innerHTML = '';
+        this.$dateContainer.innerHTML = '';
     }
 }
 

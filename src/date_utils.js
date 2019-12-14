@@ -7,6 +7,20 @@ const SECOND = 'second';
 const MILLISECOND = 'millisecond';
 
 const month_names = {
+    zh: [
+        '一月',
+        '二月',
+        '三月',
+        '四月',
+        '五月',
+        '六月',
+        '七月',
+        '八月',
+        '九月',
+        '十月',
+        '十一月',
+        '十二月'
+    ],
     en: [
         'January',
         'February',
@@ -100,7 +114,7 @@ export default {
 
             if (time_parts && time_parts.length) {
                 if (time_parts.length == 4) {
-                    time_parts[3] = '0.' + time_parts[3];
+                    time_parts[4] = '0.' + time_parts[3];
                     time_parts[3] = parseFloat(time_parts[3]) * 1000;
                 }
                 vals = vals.concat(time_parts);
@@ -141,7 +155,7 @@ export default {
             HH: values[3],
             mm: values[4],
             ss: values[5],
-            SSS:values[6],
+            SSS: values[6],
             D: values[2],
             MMMM: month_names[lang][+values[1]],
             MMM: month_names[lang][+values[1]]

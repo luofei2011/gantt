@@ -166,3 +166,10 @@ $handle-color: #ddd !default;
 		}
 	}
 }
+
+.date-container {
+  background: #fff;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
