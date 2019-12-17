@@ -686,6 +686,8 @@ export default class Gantt {
 
         $.on(this.$svg, 'mousedown', '.bar-wrapper, .handle', (e, element) => {
             const bar_wrapper = $.closest('.bar-wrapper', element);
+            const task = this.get_task(bar_wrapper.getAttribute('data-id'));
+            if (task.read_only) return;
 
             if (element.classList.contains('left')) {
                 is_resizing_left = true;
